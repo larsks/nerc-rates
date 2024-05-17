@@ -35,6 +35,27 @@ class RateItem(Base):
     name: str
     history: list[RateValue]
 
+    @pydantic.model_validator(mode="after")
+    @classmethod
+    def validate_no_overlap(cls, data: Self):
+        for x in data.history:
+            for y in data.history:
+                if x is not y:
+                    if (
+                        (x.date_until is None and y.date_until is None)
+                        or (
+                            y.date_from >= x.date_from
+                            and (x.date_until and y.date_from <= x.date_until)
+                        )
+                        or (
+                            y.date_from <= x.date_from
+                            and (y.date_until and y.date_until >= x.date_from)
+                        )
+                    ):
+                        raise ValueError("date ranges overlap")
+
+        return data
+
 
 RateItemDict = Annotated[
     dict[str, RateItem],

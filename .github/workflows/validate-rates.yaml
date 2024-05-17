@@ -1,0 +1,25 @@
+name: Validate rates file
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate-rates-file:
+    name: Validate rates file
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Set up python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install -e .
+
+      - name: Run unit tests
+        run: |
+          validate-rates-file

@@ -17,6 +17,20 @@ def test_load_from_url():
         assert r.get_value_at("CPU SU Rate", "2023-06") == "0.013"
 
 
+def test_invalid_dates():
+    mock_response_text = """
+    - name: CPU SU Rate
+      history:
+        - value: "0.013"
+          from: 2023-06
+          until: 2023-04
+    """
+    with requests_mock.Mocker() as m:
+        m.get(rates.DEFAULT_URL, text=mock_response_text)
+        with pytest.raises(ValueError):
+            load_from_url()
+
+
 def test_rates_get_value_at():
     r = rates.Rates(
         [

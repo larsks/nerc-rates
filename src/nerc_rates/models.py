@@ -56,7 +56,7 @@ def check_for_duplicates(items):
     data = {}
     for item in items:
         if item["name"] in data:
-            raise ValueError(f'found duplicate name "{item['name']}" in list')
+            raise ValueError(f"found duplicate name \"{item['name']}\" in list")
         data[item["name"]] = item
     return data
 
